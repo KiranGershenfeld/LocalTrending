@@ -36,4 +36,4 @@ services:
     env_file: "./services/video-ingest/local.env"
     restart: always
     depends_on:
-    - "db"g
+    - "db"

@@ -1,11 +1,10 @@
-MODULE = $(shell go list -m)
 
 .PHONY: generate build test lint build-docker compose compose-down migrate build-arm tag-and-push deploy
 generate:
 	go generate ./...
 
 build: # build a server
-	go build -a -o video-ingest $(MODULE)/cmd/server
+	go build -a -o video-ingest.bin video-ingest/cmd/server
 
 test:
 	go clean -testcache

@@ -127,3 +127,4 @@ modules.xml
 .env
 .DS_Store
 __pycache__/
+.bin
