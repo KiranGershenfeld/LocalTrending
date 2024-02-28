@@ -1,31 +1,9 @@
 version: '3.1'
 
 services:
-  db:
-    image: postgres:13.13-alpine3.19
-    container_name: postgres
-    environment:
-      POSTGRES_DB: local-trending
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: test
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./scripts/sql:/docker-entrypoint-initdb.d
-    hostname: db
   local-trending:
-    image: local-trending
-    build:
-      context: ./services/video-ingest
-      dockerfile: ./services/video-ingest/cmd/server/Dockerfile
+    image: kirangershenfeld/youtube-metrics:latest
     container_name: local-trending
-    ports:
-      - "8080:8080"
-    env_file: "./services/video-ingest/local.env"
-    volumes:
-      - ./services/video-ingest/config/local.yaml:/config/config.yaml
-      - ./services/video-ingest/migrations:/config/migrations
-    command: video-ingest --conf /config/config.yaml
+    env_file: ".env"
+    network_mode: host
     restart: always
-    depends_on:
-      - "db"

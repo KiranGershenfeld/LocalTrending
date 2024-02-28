@@ -11,11 +11,12 @@ RUN go mod download -x
 
 #Compile stage
 FROM build as binary
+WORKDIR /go/src/local-trending
 COPY . .
 RUN make build
 
 #Package stage
-FROM binary as pkg
-COPY --from=binary /go/src/local-trending/video-ingest /bin/video-ingest
+FROM alpine:3
+COPY --from=binary /go/src/local-trending/video-ingest.bin /bin/video-ingest
 
 CMD /bin/video-ingest

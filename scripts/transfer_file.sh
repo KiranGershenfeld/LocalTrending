@@ -14,12 +14,13 @@ if [ -z "$2" ]; then
 fi
 
 
-SOURCE_DIR="../.."
+SOURCE_DIR=""
 DESTINATION="$2"
 FILE_TO_TRANSFER="$1"
 
 # Path to your local .env file
-LOCAL_ENV_FILE="${SOURCE_DIR}/.env"
+LOCAL_ENV_FILE="services/video-ingest/.env"
+echo $LOCAL_ENV_FILE
 
 # Load variables from .env file
 if [ -f "${LOCAL_ENV_FILE}" ]; then
@@ -30,7 +31,7 @@ else
 fi
 
 # Use sshpass to provide the password and copy the specified file
-sshpass -p "$SERVER_PASSWORD" scp "$SOURCE_DIR/$FILE_TO_TRANSFER" "$SERVER_USERNAME@$SERVER_IP:~/$DESTINATION"
+sshpass -p "$SERVER_PASSWORD" scp "$FILE_TO_TRANSFER" "$SERVER_USERNAME@$SERVER_IP:~/$DESTINATION"
 
 # Check the exit status of the scp command
 if [ $? -eq 0 ]; then

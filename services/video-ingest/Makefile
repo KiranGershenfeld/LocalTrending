@@ -3,9 +3,11 @@
 generate:
 	go generate ./...
 
-build: # build a server
+# Build binary
+build: 
 	go build -a -o video-ingest.bin video-ingest/cmd/server
 
+# Build base go container, used with `run` command to live reload binary for development
 build-dev: 
 	docker build --target build -f cmd/server/Dockerfile -t local-trending-base .
 	docker run --name local-trending  --env-file local.env -v ${shell pwd}:/go/src/local-trending -v ${shell pwd}/migrations:/config/migrations -v ${shell pwd}/config/local.yaml:/config/config.yaml -td local-trending-base
@@ -19,19 +21,12 @@ test:
 
 lint:
 	gofmt -l .
-
-build-arm:
-	docker build -f cmd/server/Dockerfile -t local-trending-arm --platform linux/amd64 .
-
-tag-and-push: 
-	docker tag local-trending-arm kirangershenfeld/youtube-metrics
-	docker push kirangershenfeld/youtube-metrics
-
-deploy: build-arm tag-and-push #build, tag, push build to dockerhub
 	
-compose.%:
-	$(eval CMD = ${subst compose.,,$(@)})
-	tools/script/compose.sh $(CMD)
+# Build for amd64, tag, push build to dockerhub
+deploy:
+	docker build -f cmd/server/Dockerfile -t local-trending-amd --platform linux/amd64 .
+	docker tag local-trending-amd kirangershenfeld/youtube-metrics
+	docker push kirangershenfeld/youtube-metrics
 
 migrate:
 	docker run --rm -v migrations:/migrations --network host migrate/migrate -path=/migrations/ \
