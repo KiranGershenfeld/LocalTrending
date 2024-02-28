@@ -6,15 +6,19 @@ generate:
 build: # build a server
 	go build -a -o video-ingest.bin video-ingest/cmd/server
 
+build-dev: 
+	docker build --target build -f cmd/server/Dockerfile -t local-trending-base .
+	docker run --name local-trending  --env-file local.env -v ${shell pwd}:/go/src/local-trending -v ${shell pwd}/migrations:/config/migrations -v ${shell pwd}/config/local.yaml:/config/config.yaml -td local-trending-base
+	
+run:	
+	docker exec -it --env-file local.env local-trending reflex -s go run video-ingest/cmd/server
+	
 test:
 	go clean -testcache
 	go test ./... -v
 
 lint:
 	gofmt -l .
-
-build-docker: # build docker image
-	docker build -f cmd/server/Dockerfile -t local-trending .
 
 build-arm:
 	docker build -f cmd/server/Dockerfile -t local-trending-arm --platform linux/amd64 .

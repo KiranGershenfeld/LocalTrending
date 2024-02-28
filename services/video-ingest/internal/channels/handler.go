@@ -10,6 +10,7 @@ import (
 	"video-ingest/internal/channels/model"
 	"video-ingest/internal/config"
 	"video-ingest/internal/database"
+	"video-ingest/pkg/logging"
 )
 
 func NewHandler(cfg *config.Config, channelDB channelDB.ChannelDB) *Handler {
@@ -53,6 +54,8 @@ func (h *Handler) AddChannel(channelID string, channelName string, subscribe boo
 }
 
 func SubscribeToChannel(cfg *config.Config, channelID string) (err error) {
+	logger := logging.FromContext(context.Background())
+
 	// Prepare post data
 	postData := url.Values{
 		"hub.callback":      {fmt.Sprintf("http://%s/v1/api/videos/feed", cfg.ServerConfig.Host)},
@@ -73,7 +76,7 @@ func SubscribeToChannel(cfg *config.Config, channelID string) (err error) {
 
 	// Check response status
 	if res.StatusCode == http.StatusAccepted {
-		fmt.Println("Subscription successful!")
+		logger.Infow("Successfully subscribed to channel", "channel_id", channelID)
 		return nil
 	} else {
 		fmt.Println("Subscription failed. Status:", res.Status)

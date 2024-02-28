@@ -1,6 +1,7 @@
 package health
 
 import (
+	"fmt"
 	"net/http"
 	"video-ingest/internal/config"
 	"video-ingest/internal/middleware"
@@ -24,6 +25,7 @@ func (h *Handler) health(c *gin.Context) {
 }
 
 func RouteV1(cfg *config.Config, h *Handler, r *gin.Engine) {
+	fmt.Println(cfg)
 	v1 := r.Group("")
 	v1.Use(middleware.TimeoutMiddleware(cfg.ServerConfig.WriteTimeout))
 	v1.GET("/health", h.health)

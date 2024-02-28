@@ -10,6 +10,7 @@ import (
 	"video-ingest/internal/channels"
 	channelDB "video-ingest/internal/channels/database"
 	"video-ingest/internal/health"
+	"video-ingest/internal/scheduler"
 	"video-ingest/internal/videos"
 	videosDB "video-ingest/internal/videos/database"
 
@@ -74,6 +75,7 @@ func runApplication() {
 		fx.Invoke(
 			videos.RouteV1,
 			health.RouteV1,
+			scheduler.Run,
 
 			func(r *gin.Engine) {},
 		),

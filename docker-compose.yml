@@ -10,6 +10,8 @@ services:
       POSTGRES_PASSWORD: test
     ports:
       - "5432:5432"
+    volumes:
+      - ./scripts/sql:/docker-entrypoint-initdb.d
     hostname: db
   local-trending:
     image: local-trending
@@ -27,13 +29,3 @@ services:
     restart: always
     depends_on:
       - "db"
-  cron_scheduler:
-    image: cron_scheduler
-    build:
-      context: ./services/jobs
-      dockerfile: ./services/jobs/Dockerfile
-    container_name: cron_scheduler
-    env_file: "./services/video-ingest/local.env"
-    restart: always
-    depends_on:
-    - "db"

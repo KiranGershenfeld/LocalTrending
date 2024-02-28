@@ -13,6 +13,7 @@ type ChannelDB interface {
 	// SaveArticle saves a given article with tags.
 	// if not exist tags, then save a new tag
 	AddChannel(ctx context.Context, channel *model.Channel) error
+	GetActiveSubscriptions(ctx context.Context) (activeChannels []model.Channel, err error)
 }
 
 // NewArticleDB creates a new article db with given db
@@ -30,11 +31,24 @@ func (c *channelDB) AddChannel(ctx context.Context, channel *model.Channel) erro
 	db := database.FromContext(ctx, c.db)
 
 	if err := db.WithContext(ctx).Create(channel).Error; err != nil {
-		logger.Errorw("channel.db.AddChannel failed to save channel", "err", err)
 		if database.IsKeyConflictErr(err) {
 			return database.ErrKeyConflict
 		}
+		logger.Errorw("channel.db.AddChannel failed to save channel", "err", err)
+
 		return err
 	}
 	return nil
+}
+
+func (c *channelDB) GetActiveSubscriptions(ctx context.Context) (activeChannels []model.Channel, err error) {
+	logger := logging.FromContext(ctx)
+	db := database.FromContext(ctx, c.db)
+
+	if err := db.WithContext(ctx).Where("ingestion_active = ?", true).Find(&activeChannels).Error; err != nil {
+		logger.Errorw("channel.db.GetActiveSubscriptions failed to get active channels", "err", err)
+		return nil, err
+	}
+
+	return activeChannels, nil
 }

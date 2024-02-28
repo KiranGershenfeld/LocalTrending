@@ -17,9 +17,10 @@ import (
 )
 
 type Config struct {
-	ServerConfig  ServerConfig  `json:"server"`
-	LoggingConfig LoggingConfig `json:"logging" yaml:"logging"`
-	DBConfig      DBConfig      `json:"db"`
+	ServerConfig  ServerConfig    `json:"server"`
+	LoggingConfig LoggingConfig   `json:"logging" yaml:"logging"`
+	DBConfig      DBConfig        `json:"db"`
+	Scheduler     SchedulerConfig `json:"scheduler"`
 }
 
 type ServerConfig struct {
@@ -55,6 +56,10 @@ type DBConfig struct {
 		MaxIdle     int           `json:"maxIdle"`
 		MaxLifetime time.Duration `json:"maxLifetime"`
 	} `json:"pool"`
+}
+
+type SchedulerConfig struct {
+	RefreshAllSubscriptionsCronSchedule string `json:"refreshallsubscriptionscronschedule"`
 }
 
 func Load(configPath string) (*Config, error) {
