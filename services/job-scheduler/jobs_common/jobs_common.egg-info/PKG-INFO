@@ -1,0 +1,7 @@
+Metadata-Version: 2.1
+Name: jobs_common
+Version: 1.0
+Summary: Common utils and logic for local trending jobs
+Author: Kiran
+Author-email: 
+Requires-Dist: google-api-python-client

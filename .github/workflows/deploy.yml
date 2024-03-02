@@ -23,7 +23,6 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: ./services/video-ingest
-          dockerfile: ./cmd/server/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/local-trending:latest
           build-args: |

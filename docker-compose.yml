@@ -1,9 +1,15 @@
 version: '3.1'
 
 services:
-  local-trending:
-    image: kirangershenfeld/youtube-metrics:latest
-    container_name: local-trending
+  video-ingest:
+    image: kirangershenfeld/video-ingest:latest
+    container_name: video-ingest
     env_file: ".env"
+    network_mode: host
+    restart: always
+  job-scheduler:
+    image: kirangershenfeld/job-scheduler:latest
+    container_name: job-scheduler
+    env_file: "job-scheduler.env"
     network_mode: host
     restart: always

@@ -11,12 +11,12 @@ services:
     ports:
       - "5432:5432"
     hostname: db
-  local-trending:
-    image: local-trending
+  video-ingest:
+    image: video-ingest
     build:
       context: .
       dockerfile: cmd/server/Dockerfile
-    container_name: local-trending
+    container_name: video-ingest
     ports:
       - "8080:8080"
     env_file: "local.env"

@@ -2,9 +2,8 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"job-scheduler/internal/config"
-	"job-scheduler/internal/database"
+	"job-scheduler/internal/scheduler"
 	"job-scheduler/pkg/logging"
 	"log"
 	"os"
@@ -47,13 +46,8 @@ func runApplication() {
 	})
 	defer logging.DefaultLogger().Sync()
 
-	dsn := fmt.Sprintf("host=%s user=%s password=%s dbname=%s port=%s sslmode=%s TimeZone=US/Pacific",
-		conf.DBConfig.Credentials.Host, conf.DBConfig.Credentials.Username, conf.DBConfig.Credentials.Password, conf.DBConfig.Credentials.Name, conf.DBConfig.Credentials.Port, cfg.DBConfig.Credentials.SSLMode)
-
-	db := database.PostgreSQL{
-		ConnectionString: dsn,
-	}
-
+	printAppInfo(conf)
+	scheduler.Run(conf)
 }
 
 func printAppInfo(cfg *config.Config) {

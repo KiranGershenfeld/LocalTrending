@@ -6,15 +6,21 @@ generate:
 build: # build a server
 	go build -a -o job-scheduler.bin job-scheduler/cmd/server
 
+# Build base go container, used with `run` command to live reload binary for development
+build-dev: 
+	docker build --target build -f cmd/server/Dockerfile -t job-scheduler-base .
+	docker run --name job-scheduler  --env-file local.env -v ${shell pwd}:/go/src/job-scheduler -v ${shell pwd}/config/local.yaml:/config/config.yaml -td job-scheduler-base
+	
+run:	
+	docker exec -it --env-file local.env job-scheduler reflex -s go run job-scheduler/cmd/server
+	
+
 test:
 	go clean -testcache
 	go test ./... -v
 
 lint:
 	gofmt -l .
-
-build-docker: # build docker image
-	docker build -f cmd/server/Dockerfile -t job-scheduler .
 
 build-arm:
 	docker build -f cmd/server/Dockerfile -t job-scheduler-arm --platform linux/amd64 .
@@ -24,8 +30,4 @@ tag-and-push:
 	docker push kirangershenfeld/youtube-metrics
 
 deploy: build-arm tag-and-push #build, tag, push build to dockerhub
-	
-run:
-	docker run --name job-scheduler job-scheduler
-
 

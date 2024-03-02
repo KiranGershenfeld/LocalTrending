@@ -128,3 +128,6 @@ modules.xml
 .DS_Store
 __pycache__/
 .bin
+# jobs_common.egg-info
+
+env/

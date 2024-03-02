@@ -9,11 +9,11 @@ build:
 
 # Build base go container, used with `run` command to live reload binary for development
 build-dev: 
-	docker build --target build -f cmd/server/Dockerfile -t local-trending-base .
-	docker run --name local-trending  --env-file local.env -v ${shell pwd}:/go/src/local-trending -v ${shell pwd}/migrations:/config/migrations -v ${shell pwd}/config/local.yaml:/config/config.yaml -td local-trending-base
+	docker build --target build -f cmd/server/Dockerfile -t video-ingest-base .
+	docker run --name video-ingest  --env-file local.env -v ${shell pwd}:/go/src/video-ingest -v ${shell pwd}/migrations:/config/migrations -v ${shell pwd}/config/local.yaml:/config/config.yaml -td video-ingest-base
 	
 run:	
-	docker exec -it --env-file local.env local-trending reflex -s go run video-ingest/cmd/server
+	docker exec -it --env-file local.env video-ingest reflex -s go run video-ingest/cmd/server
 	
 test:
 	go clean -testcache
@@ -24,8 +24,8 @@ lint:
 	
 # Build for amd64, tag, push build to dockerhub
 deploy:
-	docker build -f cmd/server/Dockerfile -t local-trending-amd --platform linux/amd64 .
-	docker tag local-trending-amd kirangershenfeld/youtube-metrics
+	docker build -f cmd/server/Dockerfile -t video-ingest-amd --platform linux/amd64 .
+	docker tag video-ingest-amd kirangershenfeld/youtube-metrics
 	docker push kirangershenfeld/youtube-metrics
 
 migrate:
