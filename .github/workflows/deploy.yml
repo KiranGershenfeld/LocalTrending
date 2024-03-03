@@ -24,7 +24,7 @@ jobs:
         with:
           context: ./services/video-ingest
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/local-trending:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/youtube-metrics:video-ingest
           build-args: |
             -f cmd/server/Dockerfile
             --platform linux/amd64

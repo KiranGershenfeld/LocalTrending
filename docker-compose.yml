@@ -2,14 +2,14 @@ version: '3.1'
 
 services:
   video-ingest:
-    image: kirangershenfeld/video-ingest:latest
+    image: kirangershenfeld/youtube-metrics:video-ingest
     container_name: video-ingest
-    env_file: ".env"
+    env_file: "video-ingest/.env"
     network_mode: host
-    restart: always
+    restart: always  
   job-scheduler:
-    image: kirangershenfeld/job-scheduler:latest
+    image: kirangershenfeld/youtube-metrics:job-scheduler
     container_name: job-scheduler
-    env_file: "job-scheduler.env"
+    env_file: "job-scheduler/.env"
     network_mode: host
     restart: always

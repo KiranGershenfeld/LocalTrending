@@ -25,8 +25,8 @@ lint:
 # Build for amd64, tag, push build to dockerhub
 deploy:
 	docker build -f cmd/server/Dockerfile -t video-ingest-amd --platform linux/amd64 .
-	docker tag video-ingest-amd kirangershenfeld/youtube-metrics
-	docker push kirangershenfeld/youtube-metrics
+	docker tag video-ingest-amd kirangershenfeld/youtube-metrics:video-ingest
+	docker push kirangershenfeld/youtube-metrics:video-ingest
 
 migrate:
 	docker run --rm -v migrations:/migrations --network host migrate/migrate -path=/migrations/ \

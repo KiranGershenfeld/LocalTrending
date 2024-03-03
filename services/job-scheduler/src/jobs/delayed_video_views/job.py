@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import sys
 import logging
 from sqlalchemy import create_engine, text, exc
-from jobs_common import youtube 
+from common import youtube, utils
 
 def get_videos_from_range(engine, start_date, end_date):
         # Define the query to select records from the "videos" table created within the past hour
@@ -65,12 +65,12 @@ if __name__ == "__main__":
         print(f"Job requires three arguments but got {len(sys.argv)}, {sys.argv}")
 
     delay_days = 7
-    job_interval_seconds = 10
+    job_interval_minutes = 10
     delayed_video_views_table_name = f"video_views_{delay_days}d"
 
 
     execution_date = datetime.strptime(execution_date, '%Y-%m-%d %H:%M:%S')
-    engine = create_engine(postgres_conn_string)
+    engine = utils.create_engine_with_retry(postgres_conn_string)
     print(f"executing with date {execution_date}")
 
 
@@ -78,7 +78,7 @@ if __name__ == "__main__":
     create_video_views_table(engine, delayed_video_views_table_name)
     
     print(f"Getting 7 day old videos...")
-    video_records = get_videos_from_range(engine, execution_date - timedelta(days=delay_days), execution_date - timedelta(days=delay_days, minutes=job_interval_seconds))
+    video_records = get_videos_from_range(engine, execution_date - timedelta(days=delay_days), execution_date - timedelta(days=delay_days, minutes=job_interval_minutes))
     
 
     print("Getting video views...")

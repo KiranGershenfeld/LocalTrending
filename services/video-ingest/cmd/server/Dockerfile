@@ -17,6 +17,6 @@ RUN make build
 
 #Package stage
 FROM alpine:3
-COPY --from=binary /go/src/video-ingestg/video-ingest.bin /bin/video-ingest
+COPY --from=binary /go/src/video-ingest/video-ingest.bin /bin/video-ingest
 
 CMD /bin/video-ingest

@@ -13,3 +13,12 @@ services:
     volumes:
       - ./scripts/sql:/docker-entrypoint-initdb.d
     hostname: db
+  job-scheduler:
+    build:
+      context: ./services/job-scheduler
+    env_file:
+      - ./services/job-scheduler/local.env
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./services/job-scheduler/src:/src
